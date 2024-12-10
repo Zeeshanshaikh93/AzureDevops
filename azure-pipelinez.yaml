@@ -1,0 +1,17 @@
+# Gameoflife using java supported version 1.8
+# And maven 3.9.9
+
+# A simple pipeline for checking the process
+
+
+---
+pool: Default
+trigger: 
+   - master
+
+steps:
+  - task: Maven@4
+    inputs:
+      mavenPomFile: pom.xml
+      goals: package
+      # jdkVersionOption: '1.8'
