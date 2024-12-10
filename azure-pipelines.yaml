@@ -1,0 +1,37 @@
+## My First Azure pipeline
+
+---
+pool: Default
+trigger: none
+pr:
+  branches:
+    include:
+      - develop
+variables:
+  webproject: 'src/Presentation/Nop.Web/Nop.Web.csproj'
+  testproject: 'src/Tests/Nop.Tests/Nop.Tests.csproj'
+  buildConfiguration: 'Release'
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Building the code
+    inputs:
+      command: 'build'
+      projects: $(webproject)
+  - task: DotNetCoreCLI@2
+    displayName: publish the nopcommerce Platform
+    inputs: 
+      command: 'publish'
+      publishWebProjects: false
+      projects: $(webproject)
+      arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
+      zipAfterPublish: true
+      modifyOutputPath: true
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     pathToPublish: '$(Build.ArtifactStagingDirectory)/Output'
+  #     artifactName: '$(Build.Repository.Name)'
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet Packages'
+    inputs:
+      command: 'restore'
+      projects: $(webproject)
