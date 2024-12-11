@@ -1,0 +1,73 @@
+## My First Azure pipeline of NOPCOMMERCE.
+
+---
+pool: Default
+trigger: none
+pr:
+  branches:
+    include:
+      - develop
+# variables:
+#   webproject: 'src/Presentation/Nop.Web/Nop.Web.csproj'
+#   testproject: 'src/Tests/Nop.Tests/Nop.Tests.csproj'
+#   buildConfiguration: 'Release'
+steps:
+  - template: templates/dotnet.yaml
+    parameters: 
+      webproject: 'src/Presentation/Nop.Web/Nop.Web.csproj'
+      testproject: 'src/Tests/Nop.Tests/Nop.Tests.csproj'
+      runtests: false
+
+
+
+
+
+
+
+
+
+
+
+---  templates/.net
+--- 
+parameters:
+  - name: webproject
+    type: string
+    default: '**/*.csproj'
+  - name: testproject
+    type: string
+    default: '**/*Tests.csproj'
+  - name: runtests
+    type: boolean
+    default: true
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Building the code
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.webproject }}
+  - task: DotNetCoreCLI@2
+    displayName: Run Unit tests
+    inputs:
+      command: 'test'
+      projects: ${{ parameters.testproject }}
+    condition: 
+  - task: DotNetCoreCLI@2
+    displayName: "publish the nopcommerce Platform (Build.Repository.Name)"
+    inputs: 
+      command: 'publish'
+      publishWebProjects: false
+      projects: ${{ parameters.webproject }}
+      arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
+      zipAfterPublish: true
+      modifyOutputPath: true
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/Output'
+      artifactName: '$(Build.Repository.Name)'
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet Packages'
+    inputs:
+      command: 'restore'
+      projects: ${{ parameters.webproject }}
