@@ -52,9 +52,9 @@ steps:
     inputs:
       command: 'test'
       projects: ${{ parameters.testproject }}
-    condition: 
+    condition: ${{ eq(parameters.runtests, true) }}
   - task: DotNetCoreCLI@2
-    displayName: "publish the nopcommerce Platform (Build.Repository.Name)"
+    displayName: '$(Build.Repository.Name)'
     inputs: 
       command: 'publish'
       publishWebProjects: false
