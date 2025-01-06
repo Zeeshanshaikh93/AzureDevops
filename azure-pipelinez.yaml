@@ -15,3 +15,15 @@ steps:
       mavenPomFile: pom.xml
       goals: package
       # jdkVersionOption: '1.8'
+
+
+
+
+      ♾ Continuous Delivery vs. Continuous Deployment
+
+
+➡️ Continuous Delivery: It ensures that your code changes are always deployable, providing a reliable and automated process for building, testing, and preparing for release. However, the deployment to production is a manual step, allowing for human intervention and control over when changes go live.
+
+➡️ Continuous Deployment: It takes automation to the next level by automatically deploying every successful change to production. This means that once code passes all tests and checks, it's automatically pushed into production without the need for manual intervention.
+
+
